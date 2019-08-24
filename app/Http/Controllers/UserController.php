@@ -16,13 +16,27 @@ class UserController extends Controller
     }
 
     public function getUsers(){
-    	$users = $this->user->get();
+		$users = $this->user->get();
+		
+		$users_data = [];
+		foreach($users as $key => $user) {
+			array_push($users,[
+				'id' => $user->id,
+				'first_name' => $user->first_name,
+				'last_name' => $user->last_name,
+				'email' => $user->email,
+				'city' => $user->city,
+				'mobile_no' => $user->mobile_no,
+				'profession' => $user->profession
+			]);
+		}
+
     	if($users->count() == 0) {
     		return response()->json([
 				'status' => 'error',
 				'code' => 400,
 				'msg' => 'Users not found',
-				'data' => $users,
+				'data' => [],
 			],200);
     	}
 
@@ -30,7 +44,7 @@ class UserController extends Controller
 			'status' => 'success',
 			'code' => 200,
 			'msg' => 'Users found',
-			'data' => $users
+			'data' => $users_data
 		],200);
     }
 
@@ -69,8 +83,7 @@ class UserController extends Controller
 	    			'status' => 'error',
 	    			'code' => 404,
 	    			'msg' => 'Error occurred while registration..!please try again',
-	    			'data' => [],
-	    			'errors' => []
+	    			'data' => []
 	    		],200);
 	    	}
 
@@ -78,8 +91,15 @@ class UserController extends Controller
 				'status' => 'success',
 				'code' => 200,
 				'msg' => 'User registered successfully',
-				'data' => $this->user,
-				'errors' => []
+				'data' => [
+					'id' => $this->user->id,
+					'first_name' => $this->user->first_name,
+					'last_name' => $this->user->last_name,
+					'email' => $this->user->email,
+					'city' => $this->user->city,
+					'mobile_no' => $this->user->mobile_no,
+					'profession' => $this->user->profession
+				]
 			],200);
 	 	}	
     }
@@ -92,7 +112,7 @@ class UserController extends Controller
 				'status' => 'error',
 				'code' => 400,
 				'msg' => 'User not found',
-				'data' => $users,
+				'data' => [],
 			],200);
     	}
 
@@ -100,18 +120,26 @@ class UserController extends Controller
 			'status' => 'success',
 			'code' => 200,
 			'msg' => 'User found',
-			'data' => $user
+			'data' => [
+				'id' => $user->id,
+				'first_name' => $user->first_name,
+				'last_name' => $user->last_name,
+				'email' => $user->email,
+				'city' => $user->city,
+				'mobile_no' => $user->mobile_no,
+				'profession' => $user->profession
+			]
 		],200);
     }
 
     public function update(Request $request) {
-
+		$id = $request->Input('id');
     	$validator = Validator::make($request->all(), [
     		'first_name' => 'required|min:2',
     		'last_name' => 'required|min:2',
-    		'email' => 'required|email|unique:users',
+    		'email' => 'required|email|unique:users,'.$id.',id',
     		'city' => 'required',
-    		'mobile_no' => 'required|numeric|unique:users',
+    		'mobile_no' => 'required|numeric|unique:users,'.$id.',id',
     		'profession' => 'required',
     	]);
 
@@ -125,38 +153,89 @@ class UserController extends Controller
     		],200);
     	}
 	 	else {
-	    	
-	    	$arr = [
-	    		'first_name' => $request->Input('first_name'),
-		    	'last_name' => $request->Input('last_name'),
-		    	'email' => $request->Input('email'),
-		    	'city' => $request->Input('city'),
-		    	'mobile_no' => $request->Input('mobile_no'),
-		    	'profession' => $request->Input('profession')
-	    	];
-	    	
-	    	if(!$this->user->save()) {
+			
+			$arr = [
+				'first_name' => $request->Input('first_name'),
+				'last_name' => $request->Input('last_name'),
+				'email' => $request->Input('email'),
+				'city' => $request->Input('city'),
+				'mobile_no' => $request->Input('mobile_no'),
+				'profession' => $request->Input('profession')
+			];
+	   
+	    	if(!$this->user->where('id',$id)->update($arr)) {
 	    		return response()->json([
 	    			'status' => 'error',
 	    			'code' => 404,
-	    			'msg' => 'Error occurred while registration..!please try again',
+	    			'msg' => 'Error occurred while updating user..!please try again',
 	    			'data' => [],
-	    			'errors' => []
 	    		],200);
 	    	}
 
 	    	return response()->json([
 				'status' => 'success',
 				'code' => 200,
-				'msg' => 'User registered successfully',
-				'data' => $this->user,
-				'errors' => []
+				'msg' => 'User updated successfully',
+				'data' => [
+					'id' => $this->user->id,
+					'first_name' => $this->user->first_name,
+					'last_name' => $this->user->last_name,
+					'email' => $this->user->email,
+					'city' => $this->user->city,
+					'mobile_no' => $this->user->mobile_no,
+					'profession' => $this->user->profession
+				]
 			],200);
 	 	}
     }
 
-    public function destroy(Request $request,$id) {
-    	
-    }
+	// Tempararly commented...will uncomment when it is required
+    // public function destroy(Request $request) {
+		
+	// 	$id = $request->Input('id');
+		
+	// 	if(!$this->user->where('id',$id)->delete()) {
+	// 		return response()->json([
+	// 			'status' => 'error',
+	// 			'code' => 404,
+	// 			'msg' => 'Error occurred while deleting user..!please try again',
+	// 			'data' => [],
+	// 		],200);
+	// 	}
 
+	// 	return response()->json([
+	// 		'status' => 'success',
+	// 		'code' => 200,
+	// 		'msg' => 'User deleted successfully'
+	// 	],200);
+	// }
+	
+	public function getUserDetails($id) {
+
+        $user = $this->user->where('id',$id)->first();
+        
+        if($user->count() == 0) {
+    		return response()->json([
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'User not found',
+				'data' => [],
+			],200);
+    	}
+
+    	return response()->json([
+			'status' => 'success',
+			'code' => 200,
+			'msg' => 'Data found',
+			'data' => [
+				'id' => $user->id,
+				'first_name' => $user->first_name,
+				'last_name' => $user->last_name,
+				'email' => $user->email,
+				'city' => $user->city,
+				'mobile_no' => $user->mobile_no,
+				'profession' => $user->profession
+			]
+		],200);
+    }
 }
