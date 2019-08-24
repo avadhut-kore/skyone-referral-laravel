@@ -193,26 +193,26 @@ class ProductController extends Controller
 			],200);
 	 	}
     }
-
-    public function destroy()
-    {
-        $id = $request->Input('id');
+	// Tempararly commented...will uncomment when it is required
+    // public function destroy()
+    // {
+    //     $id = $request->Input('id');
 		
-		if(!$this->product->where('id',$id)->delete()) {
-			return response()->json([
-				'status' => 'error',
-				'code' => 404,
-				'msg' => 'Error occurred while deleting product..!please try again',
-				'data' => [],
-			],200);
-		}
+	// 	if(!$this->product->where('id',$id)->delete()) {
+	// 		return response()->json([
+	// 			'status' => 'error',
+	// 			'code' => 404,
+	// 			'msg' => 'Error occurred while deleting product..!please try again',
+	// 			'data' => [],
+	// 		],200);
+	// 	}
 
-		return response()->json([
-			'status' => 'success',
-			'code' => 200,
-			'msg' => 'Product deleted successfully'
-		],200);
-    }
+	// 	return response()->json([
+	// 		'status' => 'success',
+	// 		'code' => 200,
+	// 		'msg' => 'Product deleted successfully'
+	// 	],200);
+    // }
 
     public function getProductDetails($id) {
 

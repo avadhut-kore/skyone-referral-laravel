@@ -57,22 +57,22 @@ class ReferalController extends Controller
                 ]
                 ];
             
-            if($referal->reward_status->count() > 0) {
-                $arr['reward_status'] = [
-                    'id' => $referal->reward_status->id,
-                    'referal_id' => $referal->reward_status->referal_id,
-                    'is_contacted' => $referal->reward_status->is_contacted,
-                    'is_interested' => $referal->reward_status->is_interested,
-                    'is_purchased' => $referal->reward_status->is_purchased,
-                    'is_referal_rewarded' => $referal->reward_status->is_referal_rewarded,
-                    'is_refered_by_rewarded' => $referal->reward_status->is_refered_by_rewarded,
-                    'referal_rewarded_type' => $referal->reward_status->referal_rewarded_type,
-                    'refered_by_rewarded_type' => $referal->reward_status->refered_by_rewarded_type,
-                    'referal_reward_amount' => $referal->reward_status->referal_reward_amount,
-                    'refered_by_reward_amount' => $referal->reward_status->refered_by_reward_amount,
+            if($referal->referal_status->count() > 0) {
+                $arr['referal_status'] = [
+                    'id' => $referal->referal_status->id,
+                    'referal_id' => $referal->referal_status->referal_id,
+                    'is_contacted' => $referal->referal_status->is_contacted,
+                    'is_interested' => $referal->referal_status->is_interested,
+                    'is_purchased' => $referal->referal_status->is_purchased,
+                    'is_referal_rewarded' => $referal->referal_status->is_referal_rewarded,
+                    'is_refered_by_rewarded' => $referal->referal_status->is_refered_by_rewarded,
+                    'referal_rewarded_type' => $referal->referal_status->referal_rewarded_type,
+                    'refered_by_rewarded_type' => $referal->referal_status->refered_by_rewarded_type,
+                    'referal_reward_amount' => $referal->referal_status->referal_reward_amount,
+                    'refered_by_reward_amount' => $referal->referal_status->refered_by_reward_amount,
                 ];
             } else {
-                $arr['reward_status'] = [];
+                $arr['referal_status'] = [];
             }
 
             array_push($referal_data,$arr);

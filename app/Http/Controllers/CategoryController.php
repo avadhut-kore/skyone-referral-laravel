@@ -177,25 +177,26 @@ class CategoryController extends Controller
 	 	}
     }
 
-    public function destroy()
-    {
-        $id = $request->Input('id');
+	// Tempararly commented...will uncomment when it is required
+    // public function destroy()
+    // {
+    //     $id = $request->Input('id');
 		
-		if(!$this->category->where('id',$id)->delete()) {
-			return response()->json([
-				'status' => 'error',
-				'code' => 404,
-				'msg' => 'Error occurred while deleting category..!please try again',
-				'data' => [],
-			],200);
-		}
+	// 	if(!$this->category->where('id',$id)->delete()) {
+	// 		return response()->json([
+	// 			'status' => 'error',
+	// 			'code' => 404,
+	// 			'msg' => 'Error occurred while deleting category..!please try again',
+	// 			'data' => [],
+	// 		],200);
+	// 	}
 
-		return response()->json([
-			'status' => 'success',
-			'code' => 200,
-			'msg' => 'Category deleted successfully'
-		],200);
-    }
+	// 	return response()->json([
+	// 		'status' => 'success',
+	// 		'code' => 200,
+	// 		'msg' => 'Category deleted successfully'
+	// 	],200);
+    // }
 
     public function getCategoryDetails($id) {
         $category = Category::with('product')->where('id',$id)->first();

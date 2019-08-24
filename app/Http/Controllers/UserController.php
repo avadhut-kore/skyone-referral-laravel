@@ -189,25 +189,26 @@ class UserController extends Controller
 	 	}
     }
 
-    public function destroy(Request $request) {
+	// Tempararly commented...will uncomment when it is required
+    // public function destroy(Request $request) {
 		
-		$id = $request->Input('id');
+	// 	$id = $request->Input('id');
 		
-		if(!$this->user->where('id',$id)->delete()) {
-			return response()->json([
-				'status' => 'error',
-				'code' => 404,
-				'msg' => 'Error occurred while deleting user..!please try again',
-				'data' => [],
-			],200);
-		}
+	// 	if(!$this->user->where('id',$id)->delete()) {
+	// 		return response()->json([
+	// 			'status' => 'error',
+	// 			'code' => 404,
+	// 			'msg' => 'Error occurred while deleting user..!please try again',
+	// 			'data' => [],
+	// 		],200);
+	// 	}
 
-		return response()->json([
-			'status' => 'success',
-			'code' => 200,
-			'msg' => 'User deleted successfully'
-		],200);
-	}
+	// 	return response()->json([
+	// 		'status' => 'success',
+	// 		'code' => 200,
+	// 		'msg' => 'User deleted successfully'
+	// 	],200);
+	// }
 	
 	public function getUserDetails($id) {
 
