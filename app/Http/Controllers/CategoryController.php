@@ -9,7 +9,6 @@ use Input;
 use Session;
 use Validator;
 
-
 class CategoryController extends Controller
 {
     protected $category;
@@ -20,6 +19,7 @@ class CategoryController extends Controller
     public function getCategories()
     {
         $categories = $this->category->where('is_active',1)->get();
+
     	if($users->count() == 0) {
     		return response()->json([
 				'status' => 'error',
@@ -28,6 +28,19 @@ class CategoryController extends Controller
 				'data' => [],
 			],200);
     	}
+
+        $categories_data = [];
+        foreach ($categories as $key => $category) {
+            array_push($categories_data, [
+                'id' => $category->id,
+                'name' => $category->name,
+                'description' => $category->description,
+                'parent_category_id' => $category->parent_category_id,
+                'is_active' => $category->is_active,
+                'logo' => ($category->logo != '') ? 
+                            base_url().'assets/images/categories/'.$category->logo : ''
+            ]);
+        }
 
     	return response()->json([
 			'status' => 'success',
@@ -85,16 +98,24 @@ class CategoryController extends Controller
 				'status' => 'success',
 				'code' => 200,
 				'msg' => 'category added successfully',
-				'data' => $this->category
+				'data' => [
+                    'id' => $this->category->id,
+                    'name' =>$this->category->name,
+                    'description' =>$this->category->description,
+                    'parent_category_id' =>$this->category->parent_category_id,
+                    'is_active' =>$this->category->is_active,
+                    'logo' => ($this->category->logo != '') ? 
+                            base_url().'assets/images/categories/'.$this->category->logo : ''
+                ]
 			],200);
 	 	}
     }
 
-    public function edit()
+    public function edit($id)
     {
-        $category = $this->category->where('id',$id)->first();
+       $category = $this->category->where('id',$id)->first();
 
-    	if($category->count() == 0) {
+    	if(isset($category->id) == 0) {
     		return response()->json([
 				'status' => 'error',
 				'code' => 400,
@@ -107,7 +128,15 @@ class CategoryController extends Controller
 			'status' => 'success',
 			'code' => 200,
 			'msg' => 'Category found',
-			'data' => $category
+			'data' => [
+                'id' => $category->id,
+                'name' => $category->name,
+                'description' => $category->description,
+                'parent_category_id' => $category->parent_category_id,
+                'is_active' => $category->is_active,
+                'logo' => ($category->logo != '') ? 
+                            base_url().'assets/images/categories/'.$category->logo : ''
+            ]
 		],200);
     }
 
@@ -167,11 +196,21 @@ class CategoryController extends Controller
 	    		],200);
 	    	}
 
+            $category = $this->category->where('id',$id)->first();
+
 	    	return response()->json([
 				'status' => 'success',
 				'code' => 200,
 				'msg' => 'Category updated successfully',
-				'data' => $this->category,
+				'data' => [
+                    'id' => $category->id,
+                    'name' => $category->name,
+                    'description' => $category->description,
+                    'parent_category_id' => $category->parent_category_id,
+                    'is_active' => $category->is_active,
+                    'logo' => ($category->logo != '') ? 
+                                base_url().'assets/images/categories/'.$category->logo : ''
+                ],
 				'errors' => []
 			],200);
 	 	}
@@ -202,7 +241,7 @@ class CategoryController extends Controller
         $category = Category::with('product')->where('id',$id)->first();
         $sub_cats = Category::where('parent_category_id',$id)->get();
         
-        if($category->count() == 0) {
+        if(isset($category->id) == 0) {
     		return response()->json([
 				'status' => 'error',
 				'code' => 400,
@@ -212,11 +251,13 @@ class CategoryController extends Controller
     	}
 
         $category_data = [
+            'id' => $category->id,
             'name' => $category->name,
             'description' => $category->description,
             'parent_category_id' => $category->parent_category_id,
             'is_active' => $category->is_active,
-            'logo' => ( $category->logo != '') ? base_path().'assets/images/categories/'.$category->logo : '' ,
+            'logo' => ( $category->logo != '') ? base_path().
+                     'assets/images/categories/'.$category->logo : '' ,
         ];
 
         $products = [];
@@ -224,13 +265,14 @@ class CategoryController extends Controller
         {
             foreach($category->product as $key => $product) {
                 array_push($products, [
-                    'id' => $product->id,
-                    'name' => $product->id,
-                    'description' => $product->id,
-                    'category_id' => $product->id,
-                    'is_active' => $product->id,
-                    'reward_type_id' => $product->id,
-                    'image' => ( $product->image != '') ? base_path().'assets/images/products/'.$product->image : ''
+                     'id' => $product->id,
+                    'name' => $product->name,
+                    'description' => $product->description,
+                    'category_id' => $product->category_id,
+                    'is_active' => $product->is_active,
+                    'reward_type_id' => $product->reward_type_id,
+                    'image' => ( $product->image != '') ? base_path().
+                                'assets/images/products/'.$product->image : ''
                 ]);
             }
         }
@@ -261,28 +303,31 @@ class CategoryController extends Controller
 		],200);
     }
 
-    public function getSubCategoriesByCategoryId($id) {
+    public function getSubCategoriesByCategoryId($category_id) {
 
-        $category = Category::where('id',$id)->get();
-        $sub_cats = Category::where('parent_category_id',$id)->get();
+        $category = $this->category->where('id',$category_id)->first();
+        $sub_cats = $this->category->where('parent_category_id',$category_id)->get();
         
-        if($sub_cats->count() == 0) {
-    		return response()->json([
-				'status' => 'error',
-				'code' => 400,
-				'msg' => 'Sub Categories not found',
-				'data' => [],
-			],200);
-        }
-
         $category_data = [
             'name' => $category->name,
             'description' => $category->description,
             'parent_category_id' => $category->parent_category_id,
             'is_active' => $category->is_active,
-            'logo' => ( $category->logo != '') ? base_path().'assets/images/categories/'.$category->logo : '' ,
+            'logo' => ( $category->logo != '') ? base_path().
+                      'assets/images/categories/'.$category->logo : '' ,
         ];
-        
+
+        $category_data['sub_categories'] = [];
+
+        if($sub_cats->count() == 0) {
+    		return response()->json([
+				'status' => 'error',
+				'code' => 400,
+				'msg' => 'Sub Categories not found',
+				'data' => $category_data,
+			],200);
+        }
+
         $sub_categories = [];
         if($sub_cats->count() > 0)
         {
@@ -293,7 +338,8 @@ class CategoryController extends Controller
                     'description' => $cat->description,
                     'parent_category_id' => $cat->parent_category_id,
                     'is_active' => $cat->is_active,
-                    'logo' => ( $cat->logo != '') ? base_path().'assets/images/categories/'.$cat->logo : ''
+                    'logo' => ( $cat->logo != '') ? base_path().
+                             'assets/images/categories/'.$cat->logo : ''
                 ]);
             }
         }

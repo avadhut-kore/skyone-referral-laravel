@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
+use App\Product;
 use Illuminate\Http\Request;
 use File;
 use Input;
@@ -100,12 +100,21 @@ class ProductController extends Controller
 				'status' => 'success',
 				'code' => 200,
 				'msg' => 'product saved successfully',
-				'data' => $this->category
+				'data' => [
+                    'id' => $this->product->id,
+                    'name' => $this->product->name,
+                    'description' => $this->product->description,
+                    'category_id' => $this->product->category_id,
+                    'is_active' => $this->product->is_active,
+                    'reward_type_id' => $this->product->reward_type_id,
+                    'image' => ( $this->product->image != '') ? base_path().
+                                'assets/images/products/'.$this->product->image : ''
+                ]
 			],200);
 	 	}
     }
 
-    public function edit()
+    public function edit($id)
     {
         $product = $this->product->where('id',$id)->first();
 
@@ -122,7 +131,16 @@ class ProductController extends Controller
 			'status' => 'success',
 			'code' => 200,
 			'msg' => 'Product found',
-			'data' => $product
+			'data' => [
+                'id' => $product->id,
+                'name' => $product->name,
+                'description' => $product->description,
+                'category_id' => $product->category_id,
+                'is_active' => $product->is_active,
+                'reward_type_id' => $product->reward_type_id,
+                'image' => ( $product->image != '') ? base_path().
+                           'assets/images/products/'.$product->image : ''
+            ]
 		],200);
     }
 
@@ -152,9 +170,9 @@ class ProductController extends Controller
 			$arr = [
 				'name' => $request->Input('name'),
 				'description' => $request->Input('description'),
-				'category' => $request->Input('category'),
+				'category_id' => $request->Input('category'),
 				'is_active' => $request->Input('is_active'),
-				'reward_type' => $request->Input('reward_type')
+				'reward_type_id' => $request->Input('reward_type')
             ];
             
             // Determining If A File Was Uploaded
@@ -184,12 +202,22 @@ class ProductController extends Controller
 	    		],200);
 	    	}
 
+            $product = $this->product->where('id',$id)->first();
+
 	    	return response()->json([
 				'status' => 'success',
 				'code' => 200,
 				'msg' => 'Product updated successfully',
-				'data' => $this->product,
-				'errors' => []
+				'data' => [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'description' => $product->description,
+                    'category_id' => $product->category_id,
+                    'is_active' => $product->is_active,
+                    'reward_type_id' => $product->reward_type_id,
+                    'image' => ( $product->image != '') ? base_path().
+                                'assets/images/products/'.$product->image : ''
+                ]
 			],200);
 	 	}
     }
@@ -216,9 +244,9 @@ class ProductController extends Controller
 
     public function getProductDetails($id) {
 
-        $product = Product::with('category','reward_type')->where('id',$id)->first();
+        $product = $this->product->with('category','reward_type')->where('id',$id)->first();
         
-        if($product->count() == 0) {
+        if(isset($product->id)) {
     		return response()->json([
 				'status' => 'error',
 				'code' => 400,
@@ -229,12 +257,13 @@ class ProductController extends Controller
 
         $product_data = [
             'id' => $product->id,
-            'name' => $product->id,
-            'description' => $product->id,
-            'category_id' => $product->id,
-            'is_active' => $product->id,
-            'reward_type_id' => $product->id,
-            'image' => ( $product->image != '') ? base_path().'assets/images/products/'.$product->image : '',
+            'name' => $product->name,
+            'description' => $product->description,
+            'category_id' => $product->category_id,
+            'is_active' => $product->is_active,
+            'reward_type_id' => $product->reward_type_id,
+            'image' => ( $product->image != '') ? base_path().
+                        'assets/images/products/'.$product->image : '',
             'category' => [
                 'name' => $product->category->name,
                 'description' => $product->category->description,

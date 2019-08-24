@@ -141,7 +141,7 @@ class ReferalController extends Controller
 	 	}	
     }
 
-    public function edit(Request $request,$id) {
+    public function edit($id) {
     	$referal = $this->referal->where('id',$id)->first();
 
     	if($referal->count() == 0) {
@@ -210,53 +210,47 @@ class ReferalController extends Controller
 	    		],200);
 	    	}
 
+            $referal = $this->referal->where('id',$id)->first();
+
 	    	return response()->json([
 				'status' => 'success',
 				'code' => 200,
 				'msg' => 'Referal updated successfully',
 				'data' => [
-					'id' => $this->referal->id,
-                    'product_id' => $this->referal->product_id,
-                    'first_name' => $this->referal->first_name,
-                    'last_name' => $this->referal->last_name,
-                    'email' => $this->referal->email,
-                    'mobile_no' => $this->referal->mobile_no,
-                    'refered_by' => $this->referal->refered_by
+					'id' => $referal->id,
+                    'product_id' => $referal->product_id,
+                    'first_name' => $referal->first_name,
+                    'last_name' => $referal->last_name,
+                    'email' => $referal->email,
+                    'mobile_no' => $referal->mobile_no,
+                    'refered_by' => $referal->refered_by
 				]
 			],200);
 	 	}
     }
 
-    public function destroy(Request $request) {
+    // Tempararly commented...will uncomment when it is required
+ //    public function destroy(Request $request) {
 		
-		$id = $request->Input('id');
+	// 	$id = $request->Input('id');
 		
-		if(!$this->referal->where('id',$id)->delete()) {
-            return response()->json([
-				'status' => 'error',
-				'code' => 404,
-				'msg' => 'Error occurred while deleting referal..!please try again',
-				'data' => [],
-			],200);
-		}
+	// 	if(!$this->referal->where('id',$id)->delete()) {
+ //            return response()->json([
+	// 			'status' => 'error',
+	// 			'code' => 404,
+	// 			'msg' => 'Error occurred while deleting referal..!please try again',
+	// 			'data' => [],
+	// 		],200);
+	// 	}
 
-        $this->referal->referal_status()->detach();
+ //        $this->referal->referal_status()->detach();
 
-        // if(!$this->referal->referal_status()->detach()) {
-        //     return response()->json([
-        //         'status' => 'error',
-        //         'code' => 404,
-        //         'msg' => 'Error occurred while deleting referal..!please try again',
-        //         'data' => [],
-        //     ],200);
-        // } 
-
-		return response()->json([
-			'status' => 'success',
-			'code' => 200,
-			'msg' => 'Referal deleted successfully'
-		],200);
-	}
+	// 	return response()->json([
+	// 		'status' => 'success',
+	// 		'code' => 200,
+	// 		'msg' => 'Referal deleted successfully'
+	// 	],200);
+	// }
 	
 	public function getUserDetails($id) {
 

@@ -17,7 +17,7 @@ class CreateCategoriesTable extends Migration
             $table->bigIncrements('id');
             $table->string('name',56);
             $table->string('description',256);
-            $table->string('logo',56);
+            $table->string('logo',56)->nullable();
             $table->integer('parent_category_id')->default(0);
             $table->integer('is_active')->default(1);
             $table->timestamps();

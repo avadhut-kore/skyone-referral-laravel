@@ -5,6 +5,7 @@ use App\User;
 use Input;
 use Session;
 use Validator;
+use Hash;
 
 use Illuminate\Http\Request;
 
@@ -20,7 +21,7 @@ class UserController extends Controller
 		
 		$users_data = [];
 		foreach($users as $key => $user) {
-			array_push($users,[
+			array_push($users_data,[
 				'id' => $user->id,
 				'first_name' => $user->first_name,
 				'last_name' => $user->last_name,
@@ -76,7 +77,7 @@ class UserController extends Controller
 	    	$this->user->city = $request->Input('city');
 	    	$this->user->mobile_no = $request->Input('mobile_no');
 	    	$this->user->profession = $request->Input('profession');
-	    	$this->user->password = dcrypt($request->Input('password'));
+	    	$this->user->password = Hash::make($request->Input('password'));
 	    	
 	    	if(!$this->user->save()) {
 	    		return response()->json([
@@ -104,7 +105,7 @@ class UserController extends Controller
 	 	}	
     }
 
-    public function edit(Request $request,$id) {
+    public function edit($id) {
     	$user = $this->user->where('id',$id)->first();
 
     	if($user->count() == 0) {
@@ -137,9 +138,9 @@ class UserController extends Controller
     	$validator = Validator::make($request->all(), [
     		'first_name' => 'required|min:2',
     		'last_name' => 'required|min:2',
-    		'email' => 'required|email|unique:users,'.$id.',id',
+    		'email' => 'required|email|unique:users,id,'.$id,
     		'city' => 'required',
-    		'mobile_no' => 'required|numeric|unique:users,'.$id.',id',
+    		'mobile_no' => 'required|numeric|unique:users,id,'.$id,
     		'profession' => 'required',
     	]);
 
@@ -162,7 +163,7 @@ class UserController extends Controller
 				'mobile_no' => $request->Input('mobile_no'),
 				'profession' => $request->Input('profession')
 			];
-	   
+
 	    	if(!$this->user->where('id',$id)->update($arr)) {
 	    		return response()->json([
 	    			'status' => 'error',
@@ -172,18 +173,20 @@ class UserController extends Controller
 	    		],200);
 	    	}
 
+	    	$user = $this->user->where('id',$id)->first();
+
 	    	return response()->json([
 				'status' => 'success',
 				'code' => 200,
 				'msg' => 'User updated successfully',
 				'data' => [
-					'id' => $this->user->id,
-					'first_name' => $this->user->first_name,
-					'last_name' => $this->user->last_name,
-					'email' => $this->user->email,
-					'city' => $this->user->city,
-					'mobile_no' => $this->user->mobile_no,
-					'profession' => $this->user->profession
+					'id' => $user->id,
+					'first_name' => $user->first_name,
+					'last_name' => $user->last_name,
+					'email' => $user->email,
+					'city' => $user->city,
+					'mobile_no' => $user->mobile_no,
+					'profession' => $user->profession
 				]
 			],200);
 	 	}

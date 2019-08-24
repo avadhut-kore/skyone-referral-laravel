@@ -144,7 +144,7 @@ class ReferalStatusController extends Controller
 	 	}	
     }
 
-    public function edit(Request $request,$id) {
+    public function edit($id) {
 
     	$referal_status = $this->referal_status->where('id',$id)->get();
 
@@ -218,20 +218,22 @@ class ReferalStatusController extends Controller
 	    		],200);
 	    	}
 
+            $referal_status = $this->referal_status->where('id',$id)->first();
+
 	    	return response()->json([
 				'status' => 'success',
 				'code' => 200,
 				'msg' => 'Referal Status updated successfully',
 				'data' => [
-					'id' => $this->referal_status->id,
-                    'is_contacted' => $this->referal_status->is_contacted,
-                    'is_interested' => $this->referal_status->is_interested,
-                    'is_purchased' => $this->referal_status->is_purchased,
-                    'is_referal_rewarded' => $this->referal_status->is_referal_rewarded,
-                    'is_refered_by_rewarded' => $this->referal_status->is_refered_by_rewarded,
-                    'referal_rewarded_type' => $this->referal_status->referal_rewarded_type,
-                    'referal_reward_amount' => $this->referal_status->referal_reward_amount,
-                    'refered_by_reward_amount' => $this->referal_status->refered_by_reward_amount
+					'id' => $referal_status->id,
+                    'is_contacted' => $referal_status->is_contacted,
+                    'is_interested' => $referal_status->is_interested,
+                    'is_purchased' => $referal_status->is_purchased,
+                    'is_referal_rewarded' => $referal_status->is_referal_rewarded,
+                    'is_refered_by_rewarded' => $referal_status->is_refered_by_rewarded,
+                    'referal_rewarded_type' => $referal_status->referal_rewarded_type,
+                    'referal_reward_amount' => $referal_status->referal_reward_amount,
+                    'refered_by_reward_amount' => $referal_status->refered_by_reward_amount
 				]
 			],200);
 	 	}
