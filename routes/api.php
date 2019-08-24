@@ -48,7 +48,7 @@ Route::post('product/destroy','ProductController@destroy');
 Route::get('product/details/{id}','ProductController@getProductDetails');
 
 // Referal Controller Routes
-Route::get('referal-list','ReferalController@getCategories');
+Route::get('referal-list','ReferalController@getReferals');
 Route::post('referal/store','ReferalController@store');
 Route::get('referal/edit/{id}','ReferalController@edit');
 Route::post('referal/update','ReferalController@update');
@@ -56,7 +56,7 @@ Route::post('referal/destroy','ReferalController@destroy');
 Route::get('referal/details/{id}','ReferalController@getReferalDetails');
 
 // Referal status Controller Routes
-Route::get('referal-status-list','ReferalStatusController@getCategories');
+Route::get('referal-status-list','ReferalStatusController@getReferalStatusList');
 Route::post('referal-status/store','ReferalStatusController@store');
 Route::get('referal-status/edit/{id}','ReferalStatusController@edit');
 Route::post('referal-status/update','ReferalStatusController@update');
@@ -64,12 +64,12 @@ Route::post('referal-status/destroy','ReferalStatusController@destroy');
 Route::get('referal-status/details/{id}','ReferalStatusController@getReferalStatusDetails');
 
 // Reward type Controller Routes
-Route::get('rewart-type-list','RewardTypeController@getCategories');
-Route::post('rewart-type/store','RewardTypeController@store');
-Route::get('rewart-type/edit/{id}','RewardTypeController@edit');
-Route::post('rewart-type/update','RewardTypeController@update');
-Route::post('rewart-type/destroy','RewardTypeController@destroy');
-Route::get('rewart-type/details/{id}','RewardTypeController@getRewardTypeDetails');
+Route::get('reward-type-list','RewardTypeController@getRewardTypes');
+Route::post('reward-type/store','RewardTypeController@store');
+Route::get('reward-type/edit/{id}','RewardTypeController@edit');
+Route::post('reward-type/update','RewardTypeController@update');
+Route::post('reward-type/destroy','RewardTypeController@destroy');
+Route::get('reward-type/details/{id}','RewardTypeController@getRewardTypeDetails');
 
 
 

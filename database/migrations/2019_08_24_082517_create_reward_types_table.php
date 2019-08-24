@@ -15,7 +15,7 @@ class CreateRewardTypesTable extends Migration
     {
         Schema::create('reward_types', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('name');
+            $table->string('name');
             $table->string('unit_of_measurement',56);
             $table->integer('is_variable')->default(0);
             $table->timestamps();

@@ -96,7 +96,7 @@ class RewardTypeController extends Controller
     {
         $reward_type = $this->reward_type->where('id',$id)->first();
 
-    	if($product->count() == 0) {
+    	if(!isset($reward_type->id)) {
     		return response()->json([
 				'status' => 'error',
 				'code' => 400,
@@ -193,7 +193,7 @@ class RewardTypeController extends Controller
 
         $reward_type = $this->reward_type->where('id',$id)->first();
         
-        if($product->count() == 0) {
+        if(!isset($reward_type->id)) {
     		return response()->json([
 				'status' => 'error',
 				'code' => 400,
