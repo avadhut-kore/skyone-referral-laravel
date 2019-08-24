@@ -115,15 +115,6 @@ class UserController extends Controller
     		'profession' => 'required',
     	]);
 
-    	$arr = [
-    		'first_name' => $request->Input('first_name'),
-	    	'last_name' => $request->Input('last_name'),
-	    	'email' => $request->Input('email'),
-	    	'city' => $request->Input('city'),
-	    	'mobile_no' => $request->Input('mobile_no'),
-	    	'profession' => $request->Input('profession')
-    	];
-
     	if($validator->fails()) {
     		return response()->json([
     			'status' => 'error',
@@ -135,6 +126,14 @@ class UserController extends Controller
     	}
 	 	else {
 	    	
+	    	$arr = [
+	    		'first_name' => $request->Input('first_name'),
+		    	'last_name' => $request->Input('last_name'),
+		    	'email' => $request->Input('email'),
+		    	'city' => $request->Input('city'),
+		    	'mobile_no' => $request->Input('mobile_no'),
+		    	'profession' => $request->Input('profession')
+	    	];
 	    	
 	    	if(!$this->user->save()) {
 	    		return response()->json([
